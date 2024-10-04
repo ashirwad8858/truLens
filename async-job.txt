@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async API Call</title>
+    <script>
+        async function callApi() {
+            try {
+                const response = await fetch('http://localhost:8000/api', {
+                    method: 'GET',
+                });
+
+                const data = await response.json();
+                console.log(data);
+                document.getElementById('response').innerText = `Response: ${data.message}`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('response').innerText = 'Error occurred while calling the API';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Asynchronous API Call</h1>
+    <button onclick="callApi()">Call Backend API</button>
+    <p id="response"></p>
+</body>
+</html>
+
+
+
+
+
+pip install fastapi uvicorn
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# Allow CORS for the frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You should limit this in a real app for security
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/api")
+async def get_data():
+    return {"message": "Hello from the FastAPI backend!"}
+
+uvicorn main:app --reload
